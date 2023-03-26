@@ -6,3 +6,4 @@ build-storybook.log
 *.sh
 update.sh
 coverage
+.idea
