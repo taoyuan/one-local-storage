@@ -1,10 +1,10 @@
 import { useCallback, useEffect } from "react";
-import cls from "cross-local-storage";
+import cls from "one-local-storage";
 
 import "./App.css";
 import logo from "./logo.svg";
 
-declare module "cross-local-storage" {
+declare module "one-local-storage" {
   /**
 
 	* Augment this interface to add al custom endpoints
@@ -80,4 +80,3 @@ function App() {
 }
 
 export default App;
-

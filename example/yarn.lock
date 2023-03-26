@@ -3049,7 +3049,7 @@ cosmiconfig@^7.0.0, cosmiconfig@^7.0.1:
     path-type "^4.0.0"
     yaml "^1.10.0"
 
-"cross-local-storage@file:../lib":
+"one-local-storage@file:../lib":
   version "0.0.0"
 
 cross-spawn@^7.0.2, cross-spawn@^7.0.3:
