@@ -11,8 +11,6 @@ Many pieces of shared business logic (thunks, sagas or whatever) at some time ne
 token after login).  
 This library creates an unique interface that can be used to interact with the localStorage regardless that that your
 app is running in a browser or with react-native.
-Moreover, thanks to typescript augmentation, one-local-storage expose an augmentable interface to allow you to define
-the keys of your local storage so it will be much easier to remember the keys used to read and write data
 
 
 <!-- GETTING STARTED -->
@@ -89,46 +87,6 @@ export interface ILocalStorage {
 }
 
 ```
-
-`LocalStorageKeys` is a type alias which represents the keys of the enum `LocalStorageKeysEnum` , which you can augment
-to provide the allowed keys for read and write operations (you can find more about typescript's declaration merging
-feature
-in [the dedicated documentation](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation)).
-
-Here is how it is defined
-
-```typescript
-export enum LocalStorageKeysEnum {
-  // TO BE AUGMENTED
-}
-
-export type LocalStorageKeys = keyof typeof LocalStorageKeysEnum;
-
-```
-
-This is an example of how you can extend the enum
-<a name="key-declarations"/>
-
-```typescript
-
-/**
- * You have to add this declaration wherever you want to augment librariy's types
- */
-
-declare module "one-local-storage" {
-  /**
-   * Augment this interface to add al custom endpoints
-   */
-
-  export enum LocalStorageKeysEnum {
-    myLocalStorageKey,
-    anotherLocalStorageKey
-  }
-}
-
-```
-
-After you augment the interface, you can use the library very easily
 
 ```typescript
 // since it is the default export, you can rename crossLocalStorage with whatever you want
@@ -272,42 +230,3 @@ Project Link: [https://github.com/taoyuan/one-local-storage](https://github.com/
 
 
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-
-
-[contributors-shield]: https://img.shields.io/github/contributors/taoyuan/one-local-storage.svg?style=for-the-badge
-
-
-[contributors-url]: https://github.com/taoyuan/one-local-storage/graphs/contributors
-
-
-[forks-shield]: https://img.shields.io/github/forks/taoyuan/one-local-storage.svg?style=for-the-badge
-
-
-[forks-url]: https://github.com/taoyuan/one-local-storage/network/members
-
-
-[stars-shield]: https://img.shields.io/github/stars/taoyuan/one-local-storage.svg?style=for-the-badge
-
-
-[stars-url]: https://github.com/taoyuan/one-local-storage/stargazers
-
-
-[issues-shield]: https://img.shields.io/github/issues/taoyuan/one-local-storage.svg?style=for-the-badge
-
-
-[issues-url]: https://github.com/taoyuan/one-local-storage/issues
-
-
-[license-shield]: https://img.shields.io/github/license/taoyuan/one-local-storage.svg?style=for-the-badge
-
-
-[license-url]: https://github.com/taoyuan/one-local-storage/blob/master/LICENSE.txt
-
-
-[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-
-
-[linkedin-url]: https://linkedin.com/in/simonegaspari
-
-
-[product-screenshot]: images/screenshot.png

@@ -1,5 +1,3 @@
-
-
-export * from "./crossLocalStorage";
-import crossLocalStorage from "./crossLocalStorage";
-export default crossLocalStorage;
+export * from './one-local-storage';
+import oneLocalStorage from './one-local-storage';
+export default oneLocalStorage;

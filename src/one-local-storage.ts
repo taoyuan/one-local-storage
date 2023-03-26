@@ -3,34 +3,29 @@
 //Try to load react-native AsyncStorage
 let AsyncStorage = undefined;
 try {
-  AsyncStorage = require("@react-native-async-storage/async-storage").default;
-} catch (err: any) {
-  console.warn("native AsyncStorage not found");
+  AsyncStorage = require('@react-native-async-storage/async-storage').default;
+} catch (err) {
+  console.warn('native AsyncStorage not found');
 }
 
-console.log("localStorage is", typeof localStorage);
-const _localStorage =
-  typeof localStorage !== "undefined" ? localStorage : AsyncStorage;
+console.log('localStorage is', typeof localStorage);
+const _localStorage = typeof localStorage !== 'undefined' ? localStorage : AsyncStorage;
 
 if (!_localStorage) {
   //TODO: how to test this?
   console.error(
-    "windows.localstorage and @react-native-async-storage/async-storage are both undefined "
+    'windows.localstorage and @react-native-async-storage/async-storage are both undefined '
   );
 }
 
-export enum LocalStorageKeysEnum {}
-// to be augmented
-
-export type LocalStorageKeys = keyof typeof LocalStorageKeysEnum;
+export type LocalStorageKeys = string;
 
 type LocalStorageKeyValuePair = { [key in LocalStorageKeys]?: string | null };
 
-let _logginEnabled =
-  ["development", "dev", "test"].indexOf(process.env.NODE_ENV as any) >= 0;
-console.log("process.env.NODE_ENV", process.env.NODE_ENV);
+let _logginEnabled = ['development', 'dev', 'test'].indexOf(process.env.NODE_ENV as any) >= 0;
+console.log('process.env.NODE_ENV', process.env.NODE_ENV);
 
-export const crossLocalStorage = {
+export const oneLocalStorage = {
   getItem: async (key: LocalStorageKeys) => {
     const value = await _localStorage.getItem(key);
     _logginEnabled && console.log(`value for key ${key} is ${value}`);
@@ -42,11 +37,11 @@ export const crossLocalStorage = {
     if (data !== undefined && data != null) {
       return await _localStorage.setItem(key, data);
     }
-    return crossLocalStorage.removeItem(key);
+    return oneLocalStorage.removeItem(key);
   },
 
   removeItem: async (key: LocalStorageKeys): Promise<boolean> => {
-    _logginEnabled && console.log("removing key from local storage " + key);
+    _logginEnabled && console.log('removing key from local storage ' + key);
     try {
       return await _localStorage.removeItem(key);
     } catch (err) {
@@ -60,7 +55,7 @@ export const crossLocalStorage = {
     if (data !== undefined && data != null) {
       return await _localStorage.setItem(key, JSON.stringify(data));
     }
-    return crossLocalStorage.removeItem(key);
+    return oneLocalStorage.removeItem(key);
   },
   getJson: async <T = any>(key: LocalStorageKeys) => {
     const value = await _localStorage.getItem(key);
@@ -72,19 +67,17 @@ export const crossLocalStorage = {
   },
 
   setBoolean: async (key: LocalStorageKeys, data?: boolean | null) => {
-    _logginEnabled &&
-      console.log(`trying to insert boolean ${data} for key ${key}`);
+    _logginEnabled && console.log(`trying to insert boolean ${data} for key ${key}`);
     let value = data;
     if (value == undefined || value == null) {
       value = false;
-    } else if (typeof value !== "boolean") {
-      if (value === "true") {
+    } else if (typeof value !== 'boolean') {
+      if (value === 'true') {
         value = true;
-      } else if (value === "false") {
+      } else if (value === 'false') {
         value = false;
       } else {
-        _logginEnabled &&
-          console.log("invalid value passed to setBoolean", data);
+        _logginEnabled && console.log('invalid value passed to setBoolean', data);
         return false;
       }
     }
@@ -94,26 +87,22 @@ export const crossLocalStorage = {
   getBoolean: async (key: LocalStorageKeys) => {
     const value = await _localStorage.getItem(key);
     _logginEnabled && console.log(`boolean value for key ${key} is ${value}`);
-    return value == "true";
+    return value == 'true';
   },
 
   setNumber: async (key: LocalStorageKeys, data?: number) => {
-    _logginEnabled &&
-      console.log(`trying to insert number ${data} for key ${key}`);
+    _logginEnabled && console.log(`trying to insert number ${data} for key ${key}`);
     if (data && isNaN(data)) {
-      throw new Error("value is not a number");
+      throw new Error('value is not a number');
     }
     if (data !== undefined && data != null) {
       return await _localStorage.setItem(key, String(data));
     }
     //@ts-ignore
-    return crossLocalStorage.removeItem(key as any);
+    return oneLocalStorage.removeItem(key as any);
   },
 
-  getNumber: async (
-    key: LocalStorageKeys,
-    defaultValue: number | null = null
-  ) => {
+  getNumber: async (key: LocalStorageKeys, defaultValue: number | null = null) => {
     const value = await _localStorage.getItem(key);
     _logginEnabled && console.log(`number value for key ${key} is ${value}`);
     if (value === null) {
@@ -130,7 +119,7 @@ export const crossLocalStorage = {
         entry[1] = String(entry[1]);
         return entry;
       }) as string[][];
-    console.log("stringifiedItems", stringifiedItems);
+    console.log('stringifiedItems', stringifiedItems);
     // build promises
     const promises = stringifiedItems.map((keyValue: any[]) => {
       return new Promise<boolean>(async (resolve, reject) => {
@@ -139,7 +128,7 @@ export const crossLocalStorage = {
           const value = (data as any)[key];
           if (value === undefined || value === null) {
             //@ts-ignore
-            await crossLocalStorage.removeItem(key);
+            await oneLocalStorage.removeItem(key);
           } else {
             await _localStorage.setItem(key, (data as any)[key]);
           }
@@ -156,19 +145,17 @@ export const crossLocalStorage = {
         return acc && curr;
       }, !!result[0]);
     } catch (err) {
-      console.error("********* error in multiset", err);
+      console.error('********* error in multiset', err);
       throw err;
     }
   },
 
-  multiGet: async (
-    ...keys: LocalStorageKeys[]
-  ): Promise<LocalStorageKeyValuePair> => {
+  multiGet: async (...keys: LocalStorageKeys[]): Promise<LocalStorageKeyValuePair> => {
     const promises = keys.map((key) => {
       return _localStorage.getItem(key);
     });
     const result = await Promise.all(promises);
-    console.log("multi get reulst is", result);
+    console.log('multi get reulst is', result);
     return result.reduce((acc, current, index) => {
       acc[keys[index] as any] = current;
       return acc;
@@ -176,8 +163,7 @@ export const crossLocalStorage = {
   },
 
   multiRemove: async (...keys: LocalStorageKeys[]): Promise<boolean> => {
-    _logginEnabled &&
-      console.log("removing multiple keys from local storage ", keys);
+    _logginEnabled && console.log('removing multiple keys from local storage ', keys);
     const promises = keys.map((key) => {
       return new Promise<boolean>(async (resolve, reject) => {
         try {
@@ -201,4 +187,4 @@ export const crossLocalStorage = {
     _logginEnabled = enabled;
   },
 };
-export default crossLocalStorage;
+export default oneLocalStorage;
