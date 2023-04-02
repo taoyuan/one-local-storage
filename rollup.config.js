@@ -1,29 +1,28 @@
-import typescript from "rollup-plugin-typescript2";
-import peerDepsExternal from "rollup-plugin-peer-deps-external";
-import cleaner from "rollup-plugin-cleaner";
-import commonjs from "@rollup/plugin-commonjs";
-import packageJson from "./package.json";
-import multiInput from "rollup-plugin-multi-input";
-import copy from "rollup-plugin-copy";
+const cleaner = require('rollup-plugin-cleaner');
+const peerDepsExternal = require('rollup-plugin-peer-deps-external');
+const commonjs = require('@rollup/plugin-commonjs');
+const typescript = require('rollup-plugin-typescript2');
 
-export default [
+const packageJson = require('./package.json');
+
+module.exports = [
   {
-    input: "src/index.ts",
+    input: 'src/index.ts',
     output: [
       {
         file: packageJson.main,
-        format: "cjs",
+        format: 'cjs',
         sourcemap: true,
       },
       {
         file: packageJson.module,
-        format: "esm",
+        format: 'esm',
         sourcemap: true,
       },
     ],
     plugins: [
       cleaner({
-        targets: ["./lib"],
+        targets: ['./lib'],
       }),
       peerDepsExternal(),
       // resolve(),
@@ -31,10 +30,9 @@ export default [
 
       typescript({
         tsconfigOverride: {
-          exclude: ["cli/**/*", "**/*.stories.tsx", "**/*.test.tsx"],
+          exclude: ['cli/**/*', '**/*.stories.tsx', '**/*.test.tsx'],
         },
       }),
     ],
   },
 ];
-
