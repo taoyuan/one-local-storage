@@ -1,6 +1,6 @@
 {
   "name": "one-local-storage",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A small, typescript first, well tested, cross platform wrapper around react-native-async-storage/async-storage which works out of the on both the browser and react native",
   "main": "lib/index.js",
   "module": "lib/index.esm.js",
