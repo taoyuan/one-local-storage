@@ -23,7 +23,7 @@ export type LocalStorageKeys = string;
 type LocalStorageKeyValuePair = { [key in LocalStorageKeys]?: string | null };
 
 let _logginEnabled = ['development', 'dev', 'test'].indexOf(process.env.NODE_ENV as any) >= 0;
-console.log('process.env.NODE_ENV', process.env.NODE_ENV);
+console.log(`process.env.NODE_ENV: ${process.env.NODE_ENV}`);
 
 export const oneLocalStorage = {
   getItem: async (key: LocalStorageKeys) => {
